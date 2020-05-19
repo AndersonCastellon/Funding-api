@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User/user.schema';
+import moment from 'moment';
+
 const SECRET_KEY: string = process.env.SECRET_KEY as string;
 const CLIENT_ID: string = process.env.CLIENT_ID as string;
 
@@ -27,9 +29,7 @@ export const loginWithEmail = async (body: any) => {
   user.password = undefined;
 
   // generate jwt
-  const token = jwt.sign({ user: user }, SECRET_KEY, {
-    expiresIn: 31536000
-  });
+  const token = generateToken(user);
 
   return { user, token };
 };
@@ -84,9 +84,7 @@ export const signin = async (body: any) => {
   const user: IUser = new User({
     name: body.name,
     email: body.email,
-    password: body.password,
-    photo: body.photo,
-    role: body.role
+    password: body.password
   });
 
   user.password = await user.encriptPassword(body.password);
@@ -102,7 +100,7 @@ export const signin = async (body: any) => {
 };
 
 const generateToken = (user: IUser): string => {
-  const expiresIn = 31536000;
+  const expiresIn = moment().add(1, 'day').unix();
 
   return jwt.sign({ user: user }, SECRET_KEY, {
     expiresIn: expiresIn

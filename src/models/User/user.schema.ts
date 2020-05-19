@@ -43,7 +43,7 @@ const userSchema = new Schema(
     photo: { type: String },
     active: { type: Boolean, default: true },
     last_login: { type: Date, required: false },
-    role: { type: String, required: true, default: 'USER_ROLE', enum: roles },
+    role: { type: String, required: false, default: 'USER_ROLE', enum: roles },
     type: { type: String, default: 'user' },
     category: { type: String, default: 'natural', enum: categories },
     google: { type: Boolean, default: false },

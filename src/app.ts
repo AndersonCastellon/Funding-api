@@ -1,15 +1,29 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 const app: Application = express();
 
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
-import dotenv from 'dotenv';
 
-const APP_VERSION = 'V1';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const APP_VERSION = process.env.APP_VERSION;
+const APP_PORT = process.env.APP_PORT;
 
 // Config
-app.set('port', 3001);
-dotenv.config();
+app.set('port', APP_PORT);
+
+// CORS
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  next();
+});
+
 // Middlewares
 app.use(bodyParser.json());
 app.use(fileUpload());
